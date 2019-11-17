@@ -1,0 +1,64 @@
+ul.left-side {
+  padding: 0.2em 1em 3em;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.left-side li {
+  list-style: none;
+  text-align: left;
+  border-bottom: 1px dotted #aaa;
+  cursor: pointer;
+  padding: .5em 2em .2em 2em;
+  position: relative;
+  height: 20px;
+}
+
+.left-side li>span {
+  margin-right: .3em;
+}
+.left-side li>span.emoji {
+  position: absolute;
+  left: .5em;
+}
+.left-side li>span.face{
+  display: none;
+}
+.left-side li:hover>span.face{
+  display: inline;
+  transform: scale(1.5) rotateZ(-30deg) translateY(-.2em);
+}
+.left-side li:hover>span.bone{
+  display: none;
+}
+.res-dialog-box {
+  padding: 10px 20px;
+  width: 50vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+.left-side strong.del-path{
+  float: right;
+  color: #f90;
+  position: absolute;
+  right: .3em;
+  top: 50%;
+  opacity: 0;
+  transition: all .1s ease-out;
+  font-size: 1.5em;
+  padding: 0 .25em;
+}
+.left-side li:hover{
+  background-color: #f903;
+}
+.left-side li:hover strong.del-path{
+  transform: translateY(-50%);
+  opacity: 1;
+}
+
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }

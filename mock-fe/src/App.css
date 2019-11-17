@@ -1,0 +1,32 @@
+.App {
+  text-align: center;
+  display: flex;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.main-part {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mock-item{
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  text-align: left;
+}
+
+.mock-item-btn{
+  margin-left: 2em;
+  transition: transform .1s ease-out;
+}
+
+.mock-item-btn:hover{
+  transition: transform .3s cubic-bezier(.23,7,.17,2.05);
+  transform: scale(1.05) rotateZ(-5deg);
+}

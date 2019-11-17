@@ -1,0 +1,25 @@
+.h-textarea {
+  width: 200px;
+  min-height: 20px;
+  margin: 0 auto;
+  text-align: left;
+  outline: none;
+  padding: 3px 5px;
+  color: #000;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+.textarea-outer {
+  position: relative;
+}
+
+.placeholder {
+  position: absolute;
+  left: .4em;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #757575;
+  user-select: none;
+}

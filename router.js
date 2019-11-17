@@ -1,0 +1,100 @@
+const express = require('express')
+const router = express.Router()
+const { addPathMock, findAllMock, findMockByPath, delPathMock } = require('./db')
+
+router.post('/addMockData', async (req, res) => {
+  console.log(req.body, 'body')
+  let { data, path } = req.body
+  if (!data || !path) {
+    res.json({
+      code: 400,
+      msg: 'path and mock data need to be send'
+    })
+  }
+
+  // done TODO 验证路径格式
+  const urlReg = /^\/[\w\-]+(\.?[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/
+  if (!urlReg.test(path)) {
+    res.json({
+      code: 400,
+      msg: 'path 不是url格式, 正则: -->  /^\/[\w\-]+(\.?[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/  <--',
+    })
+    return
+  }
+
+  // done todo 过滤mock data 1. 验证json格式. 去掉多余数据
+  try {
+    let mockData = JSON.parse(data)
+    if (mockData.data) {
+      data = JSON.stringify(mockData.data)
+    }
+  } catch (err) {
+    res.json({
+      code: 400,
+      msg: "mock data must be json format",
+      errMsg: err.message
+    })
+  }
+
+  // done todo 有则改之, 无则创建
+  const result = await addPathMock({
+    data, path
+  })
+  res.json({
+    code: 200,
+    data: result
+  })
+})
+
+router.post('/delMockData', async (req, res) => {
+  // done todo
+  const { path } = req.body
+  console.log(req.body)
+  const dbRes = await delPathMock(path)
+  let flag = dbRes && dbRes.result && dbRes.result.n > 0
+  res.json({
+    code: 200,
+    data: flag,
+    msg: flag ? 'success' : '没有这个API path: ' + path
+  })
+})
+
+router.get('/mockDataList', async (req, res) => {
+  // done todo 
+  const docs = await findAllMock()
+  res.json({
+    code: 200,
+    data: docs
+  })
+})
+
+// 拦截全部请求
+router.use(async (req, res) => {
+  // 1. 获取请求路径
+  const path = req.path
+  const mockData = await findMockByPath(path)
+  let data = null
+  try {
+    // done fix 这里解析好像有问题
+    data = JSON.parse(mockData.data)
+  } catch (err) {
+    console.log(err);
+  }
+  if (data) {
+    res.json({
+      code: 200,
+      path,
+      data
+    })
+  } else {
+    res.json({
+      code: 200,
+      path,
+      data: mockData,
+      msg: '数据解析失败, 因为不是json格式'
+    })
+  }
+
+})
+
+module.exports = router

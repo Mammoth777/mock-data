@@ -62,7 +62,8 @@ function App() {
     "data": {
       "xxx": "keke",
       "msg": "886"
-    }
+    },
+    "message": "啦啦啦啦" // 可以自定义返回message
  }
   OR--
   {

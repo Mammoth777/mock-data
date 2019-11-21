@@ -4,7 +4,7 @@ const { addPathMock, findAllMock, findMockByPath, delPathMock } = require('./db'
 
 router.post('/addMockData', async (req, res) => {
   console.log(req.body, 'body')
-  let { data, path, code } = req.body
+  let { data, path, code, message } = req.body
   if (!data || !path) {
     res.json({
       code: 400,
@@ -34,6 +34,9 @@ router.post('/addMockData', async (req, res) => {
     if (mockData.code) {
       code = mockData.code
     }
+    if (mockData.message) {
+      message = mockData.message
+    }
   } catch (err) {
     errMsg = err.message
   }
@@ -47,7 +50,7 @@ router.post('/addMockData', async (req, res) => {
   } else {
     // done todo 有则改之, 无则创建
     const result = await addPathMock({
-      data, path, code
+      data, path, code, message
     })
     res.json({
       code: 200,
@@ -94,7 +97,8 @@ router.use(async (req, res) => {
     res.json({
       code: mockData.code || 200,
       path,
-      data
+      data,
+      message: mockData.message || ''
     })
   } else {
     res.json({

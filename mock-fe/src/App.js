@@ -57,6 +57,20 @@ function App() {
   //   // })
   // }
 
+  let placeholder = `{
+    "code": 403, // 可以自定义返回code, 默认200
+    "data": {
+      "xxx": "keke",
+      "msg": "886"
+    }
+ }
+  OR--
+  {
+    "xxx": "keke",
+    "msg": "886"
+  }
+ `
+
   return (
     <div className="App">
       <Part width="auto" height="100vh">
@@ -66,7 +80,7 @@ function App() {
         <section className="mock-item">
           <wired-input placeholder="api path" ref={apiPath}></wired-input>
           {/* <HTextarea placeholder="hello boy" value={data} ref={mockData} inputHandler={handler}></HTextarea> */}
-          <wired-textarea placeholder="mock data here" ref={mockData} rows="20" data-className="mock-data"></wired-textarea>
+          <wired-textarea placeholder={placeholder} ref={mockData} rows="20" data-className="mock-data"></wired-textarea>
           <div className="mock-item-btn-box">
             <div className="mock-item-btn">
               <wired-button className="mock-item-btn"

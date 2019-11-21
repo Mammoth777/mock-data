@@ -4,7 +4,7 @@ const { addPathMock, findAllMock, findMockByPath, delPathMock } = require('./db'
 
 router.post('/addMockData', async (req, res) => {
   console.log(req.body, 'body')
-  let { data, path } = req.body
+  let { data, path, code } = req.body
   if (!data || !path) {
     res.json({
       code: 400,
@@ -23,27 +23,37 @@ router.post('/addMockData', async (req, res) => {
   }
 
   // done todo 过滤mock data 1. 验证json格式. 去掉多余数据
+  let errMsg = ''
   try {
-    let mockData = JSON.parse(data)
+    let mockData = typeof data === 'string' ? JSON.parse(data) : data
     if (mockData.data) {
       data = JSON.stringify(mockData.data)
+    } else {
+      data = JSON.stringify(mockData)
+    }
+    if (mockData.code) {
+      code = mockData.code
     }
   } catch (err) {
+    errMsg = err.message
+  }
+
+  if (errMsg) {
     res.json({
       code: 400,
       msg: "mock data must be json format",
       errMsg: err.message
     })
+  } else {
+    // done todo 有则改之, 无则创建
+    const result = await addPathMock({
+      data, path, code
+    })
+    res.json({
+      code: 200,
+      data: result
+    })
   }
-
-  // done todo 有则改之, 无则创建
-  const result = await addPathMock({
-    data, path
-  })
-  res.json({
-    code: 200,
-    data: result
-  })
 })
 
 router.post('/delMockData', async (req, res) => {
@@ -76,19 +86,19 @@ router.use(async (req, res) => {
   let data = null
   try {
     // done fix 这里解析好像有问题
-    data = JSON.parse(mockData.data)
+    data = typeof mockData.data === 'string' ? JSON.parse(mockData.data) : mockData
   } catch (err) {
     console.log(err);
   }
   if (data) {
     res.json({
-      code: 200,
+      code: mockData.code || 200,
       path,
       data
     })
   } else {
     res.json({
-      code: 200,
+      code: mockData.code || 200,
       path,
       data: mockData,
       msg: '数据解析失败, 因为不是json格式'

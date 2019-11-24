@@ -33,6 +33,7 @@ const LeftSide = ({apiList = [], refresh = () => {}}) => {
   const myProps = isShow ? { open: true } : {}
   const showDialog = async (api) => {
     setIsShow(true)
+    setResponseText("Loading...")
     let res = await fetch('..' + api)
     try {
       res = await res.json()

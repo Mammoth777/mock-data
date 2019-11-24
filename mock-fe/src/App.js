@@ -16,6 +16,7 @@ async function getList () {
 function App() {
   let apiPath = createRef()
   let mockData = createRef()
+  let delayMs = createRef()
   const [list, setList] = useState([])
   // const [data, setData] = useState('')
   useEffect(() => {
@@ -29,12 +30,12 @@ function App() {
     })
   }
 
-  async function submit (path, data) {
+  async function submit (path, data, delayMs) {
     console.log('submit: ', path, data);
     const res =  await fetch('../addMockData', {
       method: 'POST',
       body: JSON.stringify({
-        path, data
+        path, data, delayMs
       }),
       headers: {
         'content-type': 'application/json'
@@ -80,6 +81,7 @@ function App() {
       <main className="main-part">
         <section className="mock-item">
           <wired-input placeholder="api path" ref={apiPath}></wired-input>
+          <wired-input placeholder="resp delay ms" ref={delayMs}></wired-input>
           {/* <HTextarea placeholder="hello boy" value={data} ref={mockData} inputHandler={handler}></HTextarea> */}
           <wired-textarea placeholder={placeholder} ref={mockData} rows="20" data-className="mock-data"></wired-textarea>
           <div className="mock-item-btn-box">
@@ -87,10 +89,11 @@ function App() {
               <wired-button className="mock-item-btn"
                 onClick={async () => {
                   // await submit(apiPath.current.value, mockData.current.state.content)
-                  const res = await submit(apiPath.current.value, mockData.current.value)
+                  const res = await submit(apiPath.current.value, mockData.current.value, delayMs.current.value)
                   if (res.code === 200) {
                     apiPath.current.value = ''
                     mockData.current.value = ''
+                    delayMs.current.value = ''
                     swal("Good job!", "Submit Success !", "success")
                   } else {
                     swal('Err code: ' + res.code, res.msg || 'No err Msg', 'error')

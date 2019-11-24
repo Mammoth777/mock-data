@@ -4,7 +4,7 @@ const { addPathMock, findAllMock, findMockByPath, delPathMock } = require('./db'
 
 router.post('/addMockData', async (req, res) => {
   console.log(req.body, 'body')
-  let { data, path, code, message } = req.body
+  let { data, path, code, message, delayMs } = req.body
   if (!data || !path) {
     res.json({
       code: 400,
@@ -50,7 +50,7 @@ router.post('/addMockData', async (req, res) => {
   } else {
     // done todo 有则改之, 无则创建
     const result = await addPathMock({
-      data, path, code, message
+      data, path, code, message, delayMs
     })
     res.json({
       code: 200,
@@ -94,18 +94,21 @@ router.use(async (req, res) => {
     console.log(err);
   }
   if (data) {
-    res.json({
-      code: mockData.code || 200,
-      path,
-      data,
-      message: mockData.message || ''
-    })
+    // 延迟返回
+    setTimeout(() => {
+      res.json({
+        code: mockData.code || 200,
+        path,
+        data,
+        message: mockData.message || ''
+      })
+    }, mockData.delayMs || 0);
   } else {
     res.json({
       code: mockData.code || 200,
       path,
       data: mockData,
-      msg: '数据解析失败, 因为不是json格式'
+      msg: '数据解析失败, 因为不是json格式;'
     })
   }
 

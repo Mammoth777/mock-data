@@ -13,7 +13,7 @@ router.post('/addMockData', async (req, res) => {
   }
 
   // done TODO 验证路径格式
-  const urlReg = /^\/[\w\-]+(\.?[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/
+  const urlReg = /^\/[\w\-]+(\.?[\w\-]+)*([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/
   if (!urlReg.test(path)) {
     res.json({
       code: 400,
@@ -64,7 +64,8 @@ router.post('/delMockData', async (req, res) => {
   const { path } = req.body
   console.log(req.body)
   const dbRes = await delPathMock(path)
-  let flag = dbRes && dbRes.result && dbRes.result.n > 0
+  console.log(dbRes,'del')
+  let flag = dbRes && dbRes.deletedCount > 0
   res.json({
     code: 200,
     data: flag,

@@ -19,4 +19,16 @@ app.use(router)
 
 app.listen(3000, _ => {
   console.log('app running on port 3000')
+  console.log('connecting to db at ' + (process.env.MONGO_URL || 'mongodb://localhost:27017'))
 })
+
+// 监听信号并优雅地关闭应用
+process.on('SIGINT', () => {
+  console.log('Received SIGINT. Exiting...');
+  process.exit();
+});
+
+process.on('SIGTERM', () => {
+  console.log('Received SIGTERM. Exiting...');
+  process.exit();
+});

@@ -1,13 +1,21 @@
 # mock data
 
-1. Mongodb
-  - DB: apiMockData
-  - collection: apiMock
+## 使用方式
 
-2. 安安安安装
-- A方式:  ~~`./install.sh`, `node index.js` 啊, 感觉好low, 可是这俩项目在一起应该咋弄啊,,,,~~
+### 1. Docker
 
-- B方式:
-  - `npm i`
-  - `node index.js`
+如本地已安装并启动mongodb，且使用的是mongo默认的27017端口， 可直接使用docker run 命令启动
 
+`docker run --rm -p 3000:3000 -d  mammoth77/mock-data:2`
+
+
+### 2. Docker Compose
+- `git clone`项目
+- `docker compose up`
+
+
+## 开发
+
+- `git clone ` project
+- `npm i`
+- `npm start`

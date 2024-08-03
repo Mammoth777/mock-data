@@ -1,24 +1,16 @@
+const { Db } = require('mongodb');
+
 // https://www.mongodb.org.cn/drivers/5.html
 const MongoClient = require('mongodb').MongoClient
-const DB_URL = 'mongodb://localhost:27017/apiMockData';
-
+const DB_URL = process.env.MONGO_URL || 'mongodb://localhost:27017';
+const client = new MongoClient(DB_URL);
 /**
  * 连接数据库, Promise形式
+ * @returns {Promise<Db>}
  */
 async function connect () {
-  return new Promise((resolve, reject) => {
-    MongoClient.connect(DB_URL, function(err, db) {
-      if (err) {
-        console.error(err);
-        reject(err)
-        return;
-      } else {
-        console.log("Connected correctly to server");
-        resolve(db)
-        // db.close();
-      }
-    })
-  })
+  const db = client.db('apiMockData')
+  return db
 }
 
 /**
@@ -31,17 +23,7 @@ async function addPathMock (mockData) {
   }
   const db = await connect()
   const collection = db.collection('apiMock')
-  return new Promise((resolve, reject) => {
-    // 有则更新, 无则插入
-    collection.update({ path: mockData.path }, mockData, { upsert: true }, (err, result) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(result)
-        db.close()
-      }
-    })
-  })
+  return collection.updateOne({ path: mockData.path }, { $set: mockData }, { upsert: true })
 }
 
 /**
@@ -50,17 +32,10 @@ async function addPathMock (mockData) {
 async function findAllMock () {
   const db = await connect()
   const collection = db.collection('apiMock')
-  return new Promise((resolve, reject) => {
-    // 查询并过滤掉 _id
-    collection.find({}, { _id: 0 }).toArray((err, docs) => {
-      if (err) {
-        reject(err)
-      } else {
-        console.log('find resolve: ' + docs.length)
-        resolve(docs)
-      }
-    })
-  })
+  // 查询并过滤掉 _id
+  const mocks = collection.find({}, { _id: 0 })
+  const list = await mocks.toArray()
+  return list
 }
 
 /**
@@ -70,16 +45,8 @@ async function findAllMock () {
 async function findMockByPath (path) {
   const db = await connect()
   const collection = db.collection('apiMock')
-  return new Promise((resolve, reject) => {
-    collection.findOne({path}, { _id: 0 }, (err, doc) => {
-      if (err) {
-        reject(err)
-      } else {
-        console.log('find resolve: ' + doc)
-        resolve(doc)
-      }
-    })
-  })
+  const doc = await collection.findOne({path}, { _id: 0 })
+  return doc
 }
 
 /**
@@ -92,15 +59,7 @@ async function delPathMock (apiPath) {
   }
   const db = await connect()
   const collection = db.collection('apiMock')
-  return new Promise((resolve, reject) => {
-    collection.deleteOne({path: apiPath}, (err, result) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(result)
-      }
-    })
-  })
+  return collection.deleteOne({path: apiPath})
 }
 
 module.exports = {

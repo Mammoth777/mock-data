@@ -45,7 +45,7 @@ router.post('/addMockData', async (req, res) => {
     res.json({
       code: 400,
       msg: "mock data must be json format",
-      errMsg: err.message
+      errMsg
     })
   } else {
     // done todo 有则改之, 无则创建

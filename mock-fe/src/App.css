@@ -30,3 +30,12 @@
   transition: transform .3s cubic-bezier(.23,7,.17,2.05);
   transform: scale(1.05) rotateZ(-5deg);
 }
+
+.globalMessage {
+  position: fixed;
+  width: 50%;
+  min-width: 500px;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}

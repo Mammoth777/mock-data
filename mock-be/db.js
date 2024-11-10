@@ -1,4 +1,4 @@
-const Database = require('better-sqlite3');
+import Database from 'better-sqlite3';
 
 const db = new Database('mockdata.db');
 
@@ -11,7 +11,7 @@ function createTable() {
 
 createTable();
 
-async function addMockApi(mockData) {
+export async function addMockApi(mockData) {
   if (!mockData) {
     return
   }
@@ -22,7 +22,7 @@ async function addMockApi(mockData) {
 /**
  * 查找单个或全部mock接口
  */
-async function findMockApi(path) {
+export async function findMockApi(path) {
   if (!path) {
     const stmt = db.prepare('SELECT * FROM api_mock');
     return stmt.all();
@@ -32,16 +32,10 @@ async function findMockApi(path) {
   }
 }
 
-async function delMockApi(path) {
+export async function delMockApi(path) {
   if (!path) {
     return
   }
   const stmt = db.prepare('DELETE FROM api_mock WHERE path = ?');
   return stmt.run(path);
-}
-
-module.exports = {
-  addMockApi,
-  findMockApi,
-  delMockApi
 }

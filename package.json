@@ -3,17 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
+  "workspaces": [
+    "mock-be",
+    "mock-fe"
+  ],
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon mock-be/index.js",
+    "dev:fe": "cd mock-fe && npm start",
+    "build:fe": "cd mock-fe && npm run build"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "better-sqlite3": "^11.5.0",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "wired-elements": "^2.0.0"
-  },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
     "eslint": "^9.14.0",

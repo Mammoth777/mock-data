@@ -1,6 +1,6 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const { addMockApi, findMockApi, delMockApi } = require('./db')
+import { addMockApi, findMockApi, delMockApi } from './db.js'
 
 router.post('/addMockData', async (req, res) => {
   let { data, path, code, message, delayMs } = req.body
@@ -112,4 +112,4 @@ router.use(async (req, res) => {
 
 })
 
-module.exports = router
+export default router

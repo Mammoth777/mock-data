@@ -1,8 +1,8 @@
-const express = require('express')
-const process = require('process')
-const router = require('./router')
+import express from 'express'
+import process from 'process'
+import router from './router.js'
+import bodyParser from 'body-parser'
 const app = express()
-const bodyParser = require('body-parser')
 
 // 解析urlencoded格式的请求体
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));

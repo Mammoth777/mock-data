@@ -3,22 +3,58 @@ import { useState, useEffect, createRef } from 'react'
 import 'wired-elements'
 import './App.css';
 // import HTextarea from './components/HTextarea'
-import Part from './components/Part'
-import LeftSide from './components/LeftList'
+import Part from './components/Part.js'
+import LeftSide from './components/LeftList.js'
 import swal from 'sweetalert'
+import ResBody from './components/ResBody.js'
+import GlobalMessage from './components/GlobalMessage.js';
 
 async function getList () {
-  let res = await fetch('../mockDataList')
-  res = await res.json()
+  let res
+  try {
+    res = await fetch('../mockDataList')
+    res = await res.json()
+  } catch (e) {
+    alert('server is down')
+  }
   return res
+}
+
+function initPasteEvent (setData, popMsg) {
+  const handlePaste = (event) => {
+    const clipboardData = event.clipboardData || window.clipboardData;
+    const pastedStr = clipboardData.getData('Text');
+    console.log('Pasted data:', pastedStr);
+    let pastedJsonObj
+    try {
+      pastedJsonObj = JSON.parse(pastedStr)
+      setData(pastedJsonObj)
+      popMsg('Paste success')
+    } catch (err) {
+      setData(pastedStr)
+      popMsg('Not in JSON format')
+      return
+    }
+  };
+
+  // 添加全局粘贴事件监听器
+  document.addEventListener('paste', handlePaste);
+
+  // 在组件卸载时移除监听器
+  return () => {
+    document.removeEventListener('paste', handlePaste);
+  };
 }
 
 function App() {
   let apiPath = createRef()
-  let mockData = createRef()
   let delayMs = createRef()
   const [list, setList] = useState([])
-  // const [data, setData] = useState('')
+  const [jsonData, setJsonData] = useState({})
+  const [globalMsg, setGlobalMsg] = useState('Paste json data here')
+  useEffect(() => {
+    initPasteEvent(setJsonData, setGlobalMsg)
+  }, []);
   useEffect(() => {
     getList().then(res => {
       setList(res.data)
@@ -58,41 +94,34 @@ function App() {
   //   // })
   // }
 
-  let placeholder = `{
-    "code": 403, // 可以自定义返回code, 默认200
-    "data": {
-      "xxx": "keke",
-      "msg": "886"
-    },
-    "message": "啦啦啦啦" // 可以自定义返回message
- }
-  OR--
-  {
-    "xxx": "keke",
-    "msg": "886"
-  }
- `
-
   return (
     <div className="App">
+      <GlobalMessage message={globalMsg}></GlobalMessage>
       <Part width="auto" height="100vh">
         <LeftSide apiList={list} refresh={refresh}></LeftSide>
       </Part>
       <main className="main-part">
         <section className="mock-item">
-          <wired-input placeholder="api path" ref={apiPath}></wired-input>
-          <wired-input placeholder="resp delay ms" ref={delayMs}></wired-input>
+          <div>
+            <wired-input placeholder="api path" ref={apiPath}></wired-input>
+          </div>
+          <div>
+            <wired-input placeholder="resp delay ms" ref={delayMs}></wired-input>
+          </div>
           {/* <HTextarea placeholder="hello boy" value={data} ref={mockData} inputHandler={handler}></HTextarea> */}
-          <wired-textarea placeholder={placeholder} ref={mockData} rows="20" data-className="mock-data"></wired-textarea>
+          <ResBody
+            jsonData={jsonData}
+            setJsonData={setJsonData}
+          ></ResBody>
           <div className="mock-item-btn-box">
             <div className="mock-item-btn">
               <wired-button className="mock-item-btn"
                 onClick={async () => {
                   // await submit(apiPath.current.value, mockData.current.state.content)
-                  const res = await submit(apiPath.current.value, mockData.current.value, delayMs.current.value)
+                  const res = await submit(apiPath.current.value, jsonData, delayMs.current.value)
                   if (res.code === 200) {
                     apiPath.current.value = ''
-                    mockData.current.value = ''
+                    setJsonData({})
                     delayMs.current.value = ''
                     swal("Good job!", "Submit Success !", "success")
                   } else {

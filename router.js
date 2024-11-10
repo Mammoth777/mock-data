@@ -1,9 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { addPathMock, findAllMock, findMockByPath, delPathMock } = require('./db')
+const { addMockApi, findMockApi, delMockApi } = require('./db')
 
 router.post('/addMockData', async (req, res) => {
-  console.log(req.body, 'body')
   let { data, path, code, message, delayMs } = req.body
   if (!data || !path) {
     res.json({
@@ -13,10 +12,11 @@ router.post('/addMockData', async (req, res) => {
   }
 
   // done TODO 验证路径格式
-  const urlReg = /^\/[\w\-]+(\.?[\w\-]+)*([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/
+  const urlReg = /^\/[\w-]+(\.?[\w-]+)*([\w\-.,@?^=%&:/~+#]*[\w\-@?^=%&/~+#])?$/
   if (!urlReg.test(path)) {
     res.json({
       code: 400,
+      // eslint-disable-next-line no-useless-escape
       msg: 'path 不是url格式, 正则: -->  /^\/[\w\-]+(\.?[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/  <--',
     })
     return
@@ -48,9 +48,11 @@ router.post('/addMockData', async (req, res) => {
       errMsg
     })
   } else {
-    // done todo 有则改之, 无则创建
-    const result = await addPathMock({
+    const result = addMockApi({
       data, path, code, message, delayMs
+    }).catch(err => {
+      console.log(err, 'err')
+      return err
     })
     res.json({
       code: 200,
@@ -62,23 +64,19 @@ router.post('/addMockData', async (req, res) => {
 router.post('/delMockData', async (req, res) => {
   // done todo
   const { path } = req.body
-  console.log(req.body)
-  const dbRes = await delPathMock(path)
-  console.log(dbRes,'del')
-  let flag = dbRes && dbRes.deletedCount > 0
+  const dbRes = await delMockApi(path)
   res.json({
     code: 200,
-    data: flag,
-    msg: flag ? 'success' : '没有这个API path: ' + path
+    data: dbRes
   })
 })
 
 router.get('/mockDataList', async (req, res) => {
   // done todo 
-  const docs = await findAllMock()
+  const list = await findMockApi();
   res.json({
     code: 200,
-    data: docs
+    data: list
   })
 })
 
@@ -86,10 +84,9 @@ router.get('/mockDataList', async (req, res) => {
 router.use(async (req, res) => {
   // 1. 获取请求路径
   const path = req.path
-  const mockData = await findMockByPath(path)
+  const mockData = await findMockApi(path)
   let data = null
   try {
-    // done fix 这里解析好像有问题
     data = typeof mockData.data === 'string' ? JSON.parse(mockData.data) : mockData
   } catch (err) {
     console.log(err);
@@ -98,15 +95,15 @@ router.use(async (req, res) => {
     // 延迟返回
     setTimeout(() => {
       res.json({
-        code: mockData.code || 200,
+        code: mockData.code,
         path,
         data,
         message: mockData.message || ''
       })
-    }, mockData.delayMs || 0);
+    }, mockData.delayMs);
   } else {
     res.json({
-      code: mockData.code || 200,
+      code: mockData.code,
       path,
       data: mockData,
       msg: '数据解析失败, 因为不是json格式;'

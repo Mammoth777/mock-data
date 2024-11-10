@@ -1,4 +1,5 @@
 const express = require('express')
+const process = require('process')
 const router = require('./router')
 const app = express()
 const bodyParser = require('body-parser')
@@ -17,9 +18,8 @@ app.use((req, res, next) => {
 })
 app.use(router)
 
-app.listen(3000, _ => {
+app.listen(3000, () => {
   console.log('app running on port 3000')
-  console.log('connecting to db at ' + (process.env.MONGO_URL || 'mongodb://localhost:27017'))
 })
 
 // 监听信号并优雅地关闭应用

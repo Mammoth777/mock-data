@@ -5,7 +5,9 @@ const db = new Database('mockdata.db');
 function createTable() {
   const stmt = db.prepare('CREATE TABLE IF NOT EXISTS "api_mock" ("id" integer,"path" varchar,"data" text,"code" int DEFAULT 200,"message" varchar,"delay_ms" int DEFAULT 0, "format" varchar DEFAULT "plaintext", PRIMARY KEY (id))');
   const result = stmt.run();
-  console.log('create table api_mock result:', result);
+  if (result.changes > 0) {
+    console.log('create table api_mock success');
+  }
   return result;
 }
 

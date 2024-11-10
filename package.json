@@ -11,7 +11,8 @@
   "scripts": {
     "start": "nodemon mock-be/index.js",
     "dev:fe": "cd mock-fe && npm start",
-    "build:fe": "cd mock-fe && npm run build"
+    "build:fe": "cd mock-fe && npm run build",
+    "build:be": "cd mock-be && npm run build"
   },
   "author": "",
   "license": "ISC",

@@ -1,14 +1,14 @@
 # mock data
 
-![常规界面](1.png)
+![常规界面](https://raw.githubusercontent.com/Mammoth777/mock-data/refs/heads/master/1.png)
 
-![2](2.png)
+![2](https://raw.githubusercontent.com/Mammoth777/mock-data/refs/heads/master/2.png)
 
 ## 使用方式
 
 启动： 
 
-`docker run --rm -p 3000:3000 -d  mammoth77/mock-data`
+`npx @jachy/mockdata`
 
 ## 开发
 

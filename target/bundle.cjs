@@ -1,10 +1,13 @@
+#!/usr/bin/env node
 'use strict';
 
 var express = require('express');
 var process = require('process');
 var Database = require('better-sqlite3');
 var bodyParser = require('body-parser');
+var url = require('url');
 
+var _documentCurrentScript = typeof document !== 'undefined' ? document.currentScript : null;
 const db = new Database('mockdata.db');
 
 function createTable() {
@@ -161,11 +164,13 @@ router.use(async (req, res) => {
 
 const app = express();
 
+const staticPath = url.fileURLToPath(new URL('../dist', (typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('bundle.cjs', document.baseURI).href))));
+
 // 解析urlencoded格式的请求体
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 // 解析json格式的body
 app.use(bodyParser.json({limit: '10mb'}));
-app.use(express.static('dist'));
+app.use(express.static(staticPath));
 
 // 路由处理
 app.use((req, res, next) => {
@@ -176,7 +181,7 @@ app.use((req, res, next) => {
 app.use(router);
 
 app.listen(3000, () => {
-  console.log('app running on port 3000');
+  console.log('App running on port 3000');
 });
 
 // 监听信号并优雅地关闭应用

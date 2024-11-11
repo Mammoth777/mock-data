@@ -5,9 +5,11 @@ import process from 'process'
 import router from './router.js'
 import bodyParser from 'body-parser'
 import { fileURLToPath } from 'url'
+import { readFileSync } from 'fs'
 const app = express()
 
 const staticPath = fileURLToPath(new URL('../dist', import.meta.url))
+const packageJsonPath = fileURLToPath(new URL('../package.json', import.meta.url))
 
 // 解析urlencoded格式的请求体
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
@@ -24,7 +26,15 @@ app.use((req, res, next) => {
 app.use(router)
 
 app.listen(3000, () => {
-  console.log('App running on port 3000')
+  const pkg = readFileSync(packageJsonPath, 'utf8')
+  let version = ''
+  try {
+    const pkgObj = JSON.parse(pkg)
+    version = pkgObj.version
+  } catch (e) {
+    console.log('read package.json error, ', e.message)
+  }
+  console.log(`App (${version}) running on port 3000`)
 })
 
 // 监听信号并优雅地关闭应用

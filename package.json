@@ -1,6 +1,6 @@
 {
   "name": "@jachy/mockdata",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -17,13 +17,11 @@
     "package.json",
     "package-lock.json",
     "mockdata.db",
-    "Readme.md",
-    "1.png",
-    "2.png"
+    "Readme.md"
   ],
   "scripts": {
     "patch": "bump patch",
-    "pub": "npm run patch && npm publish",
+    "pub": "npm run build:be && npm run patch && npm publish",
     "start": "npm run dev:be",
     "dev:be": "nodemon mock-be/index.js",
     "dev:fe": "cd mock-fe && npm start",

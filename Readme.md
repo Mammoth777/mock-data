@@ -1,5 +1,7 @@
 # mock data
 
+启动一个本地服务， 用于存储模拟数据， 并提供接口， 用于前端开发时， 通过接口获取模拟数据
+
 ![常规界面](https://raw.githubusercontent.com/Mammoth777/mock-data/refs/heads/master/1.png)
 
 ![2](https://raw.githubusercontent.com/Mammoth777/mock-data/refs/heads/master/2.png)

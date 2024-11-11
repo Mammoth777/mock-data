@@ -47,7 +47,7 @@ export default function ResBody({ jsonData, setJsonData }) {
             <wired-card>
               <code>
                 <pre style={{outline: 'none', color: '#666'}}>
-                  Some Tips: <br/>
+                  提示: (可直接CV到当前页，自动生成响应体) <br/>
                   {placeholder}
                 </pre>
               </code>

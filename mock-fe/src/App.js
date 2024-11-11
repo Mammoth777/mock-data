@@ -24,10 +24,10 @@ function initPasteEvent (setData, popMsg) {
   const handlePaste = (event) => {
     const clipboardData = event.clipboardData || window.clipboardData;
     const pastedStr = clipboardData.getData('Text');
-    console.log('Pasted data:', pastedStr);
-    let pastedJsonObj
     try {
-      pastedJsonObj = JSON.parse(pastedStr)
+      // remote comment
+      const temp = pastedStr.replace(/\/\/.*/g, '')
+      const pastedJsonObj = JSON.parse(temp)
       setData(pastedJsonObj)
       popMsg('Paste success')
     } catch (err) {
@@ -46,11 +46,17 @@ function initPasteEvent (setData, popMsg) {
   };
 }
 
+const DefaultJsonTemplate = {
+  code: 200,
+  data: {},
+  message: "hello ya"
+}
+
 function App() {
   let apiPath = createRef()
   let delayMs = createRef()
   const [list, setList] = useState([])
-  const [jsonData, setJsonData] = useState({})
+  const [jsonData, setJsonData] = useState(DefaultJsonTemplate)
   const [globalMsg, setGlobalMsg] = useState('Paste json data here')
   useEffect(() => {
     initPasteEvent(setJsonData, setGlobalMsg)
@@ -117,11 +123,10 @@ function App() {
             <div className="mock-item-btn">
               <wired-button className="mock-item-btn"
                 onClick={async () => {
-                  // await submit(apiPath.current.value, mockData.current.state.content)
                   const res = await submit(apiPath.current.value, jsonData, delayMs.current.value)
                   if (res.code === 200) {
                     apiPath.current.value = ''
-                    setJsonData({})
+                    setJsonData({...DefaultJsonTemplate})
                     delayMs.current.value = ''
                     swal("Good job!", "Submit Success !", "success")
                   } else {

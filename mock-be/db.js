@@ -1,9 +1,14 @@
 import Database from 'better-sqlite3';
+import { fileURLToPath } from 'url'
+import {
+  CreateApiMock
+} from './sql.js'
 
-const db = new Database('mockdata.db');
+const dbPath = fileURLToPath(new URL('../mockdata.db', import.meta.url))
+const db = new Database(dbPath);
 
 function createTable() {
-  const stmt = db.prepare('CREATE TABLE IF NOT EXISTS "api_mock" ("id" integer,"path" varchar,"data" text,"code" int DEFAULT 200,"message" varchar,"delay_ms" int DEFAULT 0, "format" varchar DEFAULT "plaintext", PRIMARY KEY (id))');
+  const stmt = db.prepare(CreateApiMock);
   const result = stmt.run();
   if (result.changes > 0) {
     console.log('create table api_mock success');

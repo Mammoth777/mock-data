@@ -13,7 +13,7 @@
   },
   "files": [
     "dist",
-    "mock-be",
+    "target",
     "package.json",
     "package-lock.json",
     "mockdata.db",

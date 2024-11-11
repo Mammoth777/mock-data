@@ -31,8 +31,14 @@ const LeftSide = ({apiList = [], refresh = () => {}}) => {
   const [isShow, setIsShow] = useState(false)
   const [responseText, setResponseText] = useState('')
   const myProps = isShow ? { open: true } : {}
+  document.addEventListener('keyup', e => {
+    if (isShow && e.key === 'Escape') {
+      hideDialog()
+    }
+  })
   const showDialog = async (api) => {
     setIsShow(true)
+    
     setResponseText("Loading...")
     let res = await fetch('..' + api)
     try {
@@ -43,7 +49,6 @@ const LeftSide = ({apiList = [], refresh = () => {}}) => {
     res = JSON.stringify(res, null, 2)
     res = syntaxHighlight(res) // 高亮
     setResponseText(res)
-
   }
   const hideDialog = () => {
     setIsShow(false)

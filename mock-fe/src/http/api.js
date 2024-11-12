@@ -1,6 +1,6 @@
 import { get, post, http } from "./http";
 
-const prefix = '/api'
+const prefix = import.meta.env.PROD ? '' : '/api'
 
 // '../addMockData'
 export function addMockData(data) {

@@ -41,13 +41,9 @@ export const LeftSide = ({apiList = [], refresh = () => {}}) => {
     setIsShow(true)
     
     setResponseText("Loading...")
-    let res = await getMockApi(api)
-    try {
-      res = await res.json()
-    } catch(e) {
+    let res = await getMockApi(api).catch(e => {
       console.log(e)
-      res = await res.text()
-    }
+    })
     res = JSON.stringify(res, null, 2)
     res = syntaxHighlight(res) // 高亮
     setResponseText(res)
@@ -56,7 +52,7 @@ export const LeftSide = ({apiList = [], refresh = () => {}}) => {
     setIsShow(false)
   }
 
-  const delMockData = async (e, api) => {
+  const delHandler = async (e, api) => {
     e.stopPropagation()
     let res = await delMockData({path: api})
     if (res.code === 200 && res.data) {
@@ -77,7 +73,7 @@ export const LeftSide = ({apiList = [], refresh = () => {}}) => {
             <span>
               {api.path}
             </span>
-            <strong className="del-path" onClick={e => delMockData(e, api.path)}>x</strong>
+            <strong className="del-path" onClick={e => delHandler(e, api.path)}>x</strong>
           </li>
         ))
       }
@@ -89,7 +85,9 @@ export const LeftSide = ({apiList = [], refresh = () => {}}) => {
       {apiList.length ? list : noList}
       <wired-dialog { ...myProps }>
         <div className="res-dialog-box">
-          <wired-button onClick={hideDialog}>Close</wired-button>
+          <div className='fx-end'>
+            <wired-button onClick={hideDialog}>Close</wired-button>
+          </div>
           <div>
             <pre
               dangerouslySetInnerHTML={{ __html: responseText}}

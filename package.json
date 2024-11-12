@@ -1,6 +1,6 @@
 {
-  "name": "mockdata",
-  "version": "1.0.0",
+  "name": "@jachy/mockdata",
+  "version": "1.0.10",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -8,10 +8,24 @@
     "mock-be",
     "mock-fe"
   ],
+  "bin": {
+    "mockdata": "target/bundle.cjs"
+  },
+  "files": [
+    "dist",
+    "target",
+    "package.json",
+    "package-lock.json",
+    "mockdata.db",
+    "Readme.md"
+  ],
   "scripts": {
-    "start": "nodemon mock-be/index.js",
-    "dev:fe": "cd mock-fe && npm run dev",
-    "dev:be": "cd mock-be && npm run dev",
+    "patch": "bump patch",
+    "pub": "npm run build:be && npm run patch && npm publish",
+    "start": "npm run dev:be",
+    "dev:be": "nodemon mock-be/index.js",
+    "dev:fe": "cd mock-fe && npm start",
+    "build": "npm run build:fe && npm run build:be",
     "build:fe": "cd mock-fe && npm run build",
     "build:be": "cd mock-be && npm run build"
   },
@@ -19,8 +33,18 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.14.0",
+    "@jsdevtools/version-bump-prompt": "^6.1.0",
     "eslint": "^9.14.0",
     "globals": "^15.12.0",
     "nodemon": "^3.1.4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.5.0",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1"
   }
 }

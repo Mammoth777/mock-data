@@ -1,0 +1,1 @@
+export const CreateApiMock = 'CREATE TABLE IF NOT EXISTS "api_mock" ("id" integer,"path" varchar,"data" text,"code" int DEFAULT 200,"message" varchar,"delay_ms" int DEFAULT 0, "format" varchar DEFAULT "plaintext", PRIMARY KEY (id))'

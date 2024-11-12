@@ -100,7 +100,7 @@ router.use(async (req, res) => {
         data,
         message: mockData.message || ''
       })
-    }, mockData.delayMs);
+    }, mockData.delay_ms);
   } else {
     res.json({
       code: mockData.code,

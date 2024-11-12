@@ -1,19 +1,21 @@
 import { get, post, http } from "./http";
 
+const prefix = '/api'
+
 // '../addMockData'
 export function addMockData(data) {
-  return post('/addMockData', data)
+  return post(prefix + '/addMockData', data)
 }
 
 // mockDataList
 export function getMockList() {
-  return get('/mockDataList')
+  return get(prefix + '/mockDataList')
 }
 
 export function delMockData(data) {
-  return post('/delMockData', data)
+  return post(prefix + '/delMockData', data)
 }
 
 export function getMockApi(api) {
-  return http(api)
+  return http(prefix + api)
 }

@@ -73,27 +73,8 @@ function App() {
   }
 
   async function submit (path, data, delayMs) {
-    console.log('submit: ', path, data);
-    const res = await addMockData({
-      path, data, delayMs
-    })
-    let jsonRes
-    try {
-      jsonRes = await res.json()
-    } catch (err) {
-      jsonRes = await res.text()
-      console.log(err)
-    }
-    console.log(jsonRes)
-    refresh()
-    return jsonRes 
+    return addMockData({ path, data, delayMs })
   }
-  // let handler = (v, e, t) => {
-  //   console.log(v, e, t);
-  //   // t.setState({
-  //   //   content: ''
-  //   // })
-  // }
 
   return (
     <div className="App">

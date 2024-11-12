@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "start": "nodemon mock-be/index.js",
-    "dev:fe": "cd mock-fe && npm start",
+    "dev:fe": "cd mock-fe && npm run dev",
     "build:fe": "cd mock-fe && npm run build",
     "build:be": "cd mock-be && npm run build"
   },

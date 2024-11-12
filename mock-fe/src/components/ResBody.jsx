@@ -1,5 +1,6 @@
 import { JsonEditor } from 'json-edit-react'
 import { useEffect, useRef, useState } from 'react'
+import PropTypes from 'prop-types'
 
 const placeholder = `{
   "code": 403, // 可以自定义返回code, 默认200
@@ -15,6 +16,11 @@ OR--
   "msg": "886"
 }
 `
+
+ResBody.propTypes = {
+  jsonData: PropTypes.object,
+  setJsonData: PropTypes.func
+}
 
 export default function ResBody({ jsonData, setJsonData }) {
   const [showTip, setShowTip] = useState(false);

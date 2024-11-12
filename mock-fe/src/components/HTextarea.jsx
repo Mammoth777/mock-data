@@ -1,5 +1,6 @@
 import React from 'react'
 import './HTextarea.css'
+import PropTypes from 'prop-types'
 
 class HTextarea extends React.Component {
   constructor (props) {
@@ -36,6 +37,9 @@ class HTextarea extends React.Component {
       </div>
     )
   }
+}
+HTextarea.propTypes = {
+  inputHandler: PropTypes.func
 }
 
 export default HTextarea

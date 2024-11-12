@@ -1,7 +1,8 @@
-import React from 'react'
-import { useState, createRef } from 'react'
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 import './leftSide.css'
 import swal from 'sweetalert'
+import { delMockData, getMockApi } from '../http/api'
 
 /**
  * 把json改成高亮
@@ -9,7 +10,7 @@ import swal from 'sweetalert'
  */
 function syntaxHighlight(json) {
   json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, function (match) {
       var cls = 'number';
       if (/^"/.test(match)) {
           if (/:$/.test(match)) {
@@ -26,7 +27,7 @@ function syntaxHighlight(json) {
   });
 }
 
-const LeftSide = ({apiList = [], refresh = () => {}}) => {
+export const LeftSide = ({apiList = [], refresh = () => {}}) => {
   // done todo 点击api名, 弹出dialog 显示response
   const [isShow, setIsShow] = useState(false)
   const [responseText, setResponseText] = useState('')
@@ -34,10 +35,11 @@ const LeftSide = ({apiList = [], refresh = () => {}}) => {
   const showDialog = async (api) => {
     setIsShow(true)
     setResponseText("Loading...")
-    let res = await fetch('..' + api)
+    let res = await getMockApi(api)
     try {
       res = await res.json()
     } catch(e) {
+      console.log(e)
       res = await res.text()
     }
     res = JSON.stringify(res, null, 2)
@@ -51,16 +53,7 @@ const LeftSide = ({apiList = [], refresh = () => {}}) => {
 
   const delMockData = async (e, api) => {
     e.stopPropagation()
-    let res = await fetch('../delMockData', {
-      method: 'POST',
-      body: JSON.stringify({
-        path: api
-      }),
-      headers: {
-        'content-type': 'application/json'
-      }
-    })
-    res = await res.json()
+    let res = await delMockData({path: api})
     if (res.code === 200 && res.data) {
       refresh()
       swal('Delete Success', 'ok', 'success')
@@ -73,7 +66,7 @@ const LeftSide = ({apiList = [], refresh = () => {}}) => {
     <ul className="left-side">
       {
         apiList.map((api, index) => (
-          <li key={index} onClick={e => showDialog(api.path)}>
+          <li key={index} onClick={() => showDialog(api.path)}>
             <span role="img" aria-label="each-api" className="emoji bone">🦴</span>
             <span role="img" aria-label="each-api" className="emoji face">🤩 </span>
             <span>
@@ -102,6 +95,10 @@ const LeftSide = ({apiList = [], refresh = () => {}}) => {
       </wired-dialog>
     </div>
   )
+}
+LeftSide.propTypes = {
+  apiList: PropTypes.array,
+  refresh: PropTypes.func
 }
 
 export default LeftSide

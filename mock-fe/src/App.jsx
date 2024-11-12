@@ -1,21 +1,20 @@
-import React from 'react';
 import { useState, useEffect, createRef } from 'react'
 import 'wired-elements'
 import './App.css';
 // import HTextarea from './components/HTextarea'
-import Part from './components/Part.js'
-import LeftSide from './components/LeftList.js'
+import Part from './components/Part'
+import LeftSide from './components/LeftList'
 import swal from 'sweetalert'
-import ResBody from './components/ResBody.js'
-import GlobalMessage from './components/GlobalMessage.js';
+import ResBody from './components/ResBody'
+import GlobalMessage from './components/GlobalMessage';
+import { addMockData, getMockList } from './http/api'
 
 async function getList () {
   let res
   try {
-    res = await fetch('../mockDataList')
-    res = await res.json()
+    res = await getMockList()
   } catch (e) {
-    alert('server is down')
+    alert('server error' + e.message)
   }
   return res
 }
@@ -33,6 +32,7 @@ function initPasteEvent (setData, popMsg) {
     } catch (err) {
       setData(pastedStr)
       popMsg('Not in JSON format')
+      console.log(err.message)
       return
     }
   };
@@ -68,20 +68,15 @@ function App() {
 
   async function submit (path, data, delayMs) {
     console.log('submit: ', path, data);
-    const res =  await fetch('../addMockData', {
-      method: 'POST',
-      body: JSON.stringify({
-        path, data, delayMs
-      }),
-      headers: {
-        'content-type': 'application/json'
-      }
+    const res = await addMockData({
+      path, data, delayMs
     })
     let jsonRes
     try {
       jsonRes = await res.json()
     } catch (err) {
       jsonRes = await res.text()
+      console.log(err)
     }
     console.log(jsonRes)
     refresh()

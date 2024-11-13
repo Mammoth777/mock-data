@@ -20,7 +20,7 @@
     "Readme.md"
   ],
   "scripts": {
-    "patch": "bump patch",
+    "patch": "bump patch package.json version.js",
     "pub": "npm run build:be && npm run patch && npm publish",
     "start": "npm run dev:be",
     "dev:be": "nodemon mock-be/index.js",

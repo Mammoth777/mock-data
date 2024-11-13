@@ -7,14 +7,16 @@ import LeftSide from './components/LeftList'
 import swal from 'sweetalert'
 import ResBody from './components/ResBody'
 import GlobalMessage from './components/GlobalMessage';
-import { addMockData, getMockList } from './http/api'
+import { addMockData, getMockList, serverAlive } from './service/api'
+import Version from './components/Version';
+import GlobalState from './globalState'
 
 async function getList () {
   let res
   try {
     res = await getMockList()
   } catch (e) {
-    alert('server error' + e.message)
+    console.log(e)
   }
   return res
 }
@@ -46,6 +48,16 @@ function initPasteEvent (setData, popMsg) {
   };
 }
 
+async function getServerVersion() {
+  let res
+  try {
+    res = await serverAlive()
+  } catch (e) {
+    console.log(e)
+  }
+  return res
+}
+
 const DefaultJsonTemplate = {
   code: 200,
   data: {},
@@ -58,14 +70,20 @@ function App() {
   const [list, setList] = useState([])
   const [jsonData, setJsonData] = useState(DefaultJsonTemplate)
   const [globalMsg, setGlobalMsg] = useState('Paste json data here')
+  const [version, setVersion] = useState('')
+
   useEffect(() => {
     initPasteEvent(setJsonData, setGlobalMsg)
-  }, []);
-  useEffect(() => {
+    getServerVersion()
+      .then(res => {
+        const v = res.code === 200 ? res.data : ''
+        setVersion(v)
+        GlobalState.setVersion(v)
+      })
     getList().then(res => {
       setList(res.data)
     })
-  }, []) // 第二个参数传入Dep, 依赖更新才会再次调用这个useEffect, 空数组里没得更新, 所以只会调用一次
+  }, [])
   async function refresh () {
     getList().then(res => {
       setList(res.data)
@@ -78,6 +96,7 @@ function App() {
 
   return (
     <div className="App">
+      <Version version={version}></Version>
       <GlobalMessage message={globalMsg}></GlobalMessage>
       <Part width="auto" height="100vh">
         <LeftSide apiList={list} refresh={refresh}></LeftSide>

@@ -5,6 +5,14 @@
   overflow: hidden;
 }
 
+.version {
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding-right: 5px;
+  color: #cacaca;
+}
+
 .main-part {
   width: 100%;
   height: 100vh;

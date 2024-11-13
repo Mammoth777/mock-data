@@ -2,7 +2,7 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import './leftSide.css'
 import swal from 'sweetalert'
-import { delMockData, getMockApi } from '../http/api'
+import { delMockData, getMockApi } from '../service/api'
 
 /**
  * 把json改成高亮

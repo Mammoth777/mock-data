@@ -6,6 +6,7 @@ import {
 
 const dbPath = fileURLToPath(new URL('../mockdata.db', import.meta.url))
 const db = new Database(dbPath);
+console.log('db path: ' + dbPath);
 
 function createTable() {
   const stmt = db.prepare(CreateApiMock);

@@ -22,7 +22,6 @@
   "scripts": {
     "patch": "bump patch package.json version.js",
     "pub": "npm run build:be && npm run patch && npm publish",
-    "start": "npm run dev:be",
     "dev:be": "nodemon mock-be/index.js",
     "dev:fe": "cd mock-fe && npm run dev",
     "build": "npm run build:fe && npm run build:be",
@@ -41,6 +40,10 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mammoth777/mock-data"
   },
   "dependencies": {
     "better-sqlite3": "^11.5.0",

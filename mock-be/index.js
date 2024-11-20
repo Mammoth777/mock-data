@@ -51,7 +51,7 @@ async function bootstrap() {
       console.log('read package.json error, ', e.message)
     }
     
-    console.log(`App (${version}) running on port ${CONFIG.port}`)
+    console.log(`Server (${version}) running on port ${CONFIG.port}`)
   })
 }
 

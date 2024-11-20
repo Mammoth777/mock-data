@@ -1,6 +1,10 @@
 # mock data
 
-启动一个本地服务， 用于存储模拟数据， 并提供接口; 前端开发时， 通过接口获取模拟数据
+场景1: 新功能开发前，格式已确定，后端接口不通。 
+场景2: 当前功能在现场有问题， 但现场环境无法复现。
+
+解决方案：
+- 本地启动一个服务， 快速配置模拟接口返回值
 
 ![常规界面](https://raw.githubusercontent.com/Mammoth777/mock-data/refs/heads/master/1.png)
 
@@ -16,7 +20,8 @@
 
 - `git clone ` project
 - `npm i`
-- `npm start`
+- `npm run dev:be`
+- `npm run dev:fe`
 
 
 ## todo
